@@ -1,0 +1,24 @@
+{
+  "key_id": "license-issuer-2026-q2",
+  "version": 1,
+  "use": "License JWT signing for ArmoredGate license platform (license.armored.app). Signs ARMOR-1- prefixed JWT tokens that gate Volt CLI Pro/Enterprise features.",
+  "algorithm": "EC_SIGN_P384_SHA384",
+  "curve": "P-384",
+  "digest": "SHA-384",
+  "signature_format": "JWT (JWS) with raw r||s ECDSA signature (96 bytes), base64url-encoded",
+  "key_material_format": "PKIX, PEM-encoded",
+  "protection_level": "HSM",
+  "compliance": "FIPS-140-3 Level 3",
+  "kms_resource": "projects/ag-fed-signing-root-prod/locations/us-central1/keyRings/signing-root-prod-ring/cryptoKeys/license-issuer-2026-q2/cryptoKeyVersions/1",
+  "fingerprint_sha256_der": "e8782f00b335880fe2c4a50f73dc33b4c6cde93b6ef16391d1038713d00bf0c9",
+  "pem_file": "license-issuer-2026-q2.pem",
+  "issued_at": "2026-05-13T19:59:00Z",
+  "status": "active",
+  "rotation_plan": "Targeted Q3 2026, with non-disruptive overlap (kid header binds tokens to specific key version)",
+  "signing_service_account": "license-issuer-prod@ag-fed-signing-root-prod.iam.gserviceaccount.com",
+  "automation_model": "24/7 automated signing via attached service account (Stripe webhooks trigger issuance). Distinct from image-signing-root which uses time-bounded ceremony bindings.",
+  "verification_recipe": {
+    "jwt": "Verify ES384 JWT signature against the PEM-encoded public key. The kid header (e.g., 'license-issuer-2026-q2/v1') identifies which key version signed the token; verifiers cache pubkeys keyed by kid for rotation support.",
+    "note": "License tokens are NOT verified via openssl directly; the Volt CLI embeds this PEM at build time and uses the ECDSA library to verify ES384 JWTs."
+  }
+}

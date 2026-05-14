@@ -1,0 +1,40 @@
+{
+  "key_id": "image-signing-root-2026-q2",
+  "version": 2,
+  "use": "Customer-facing artifact signing (Linux binaries, OCI container images, partner deliverables under ceremony control)",
+  "algorithm": "EC_SIGN_P384_SHA384",
+  "curve": "P-384",
+  "digest": "SHA-384",
+  "signature_format": "ASN.1 DER (published as base64-encoded in .sig files)",
+  "key_material_format": "PKIX, PEM-encoded",
+  "protection_level": "HSM",
+  "compliance": "FIPS-140-3 Level 3",
+  "kms_resource": "projects/ag-fed-signing-root-prod/locations/us-central1/keyRings/signing-root-prod-ring/cryptoKeys/image-signing-root-2026-q2/cryptoKeyVersions/2",
+  "fingerprint_sha256_der": "175951859b9aa7d0e0fd987db20d4c5d9a438a75f82fa4ac4655bbd62b3c26d9",
+  "pem_file": "image-signing-root-2026-q2.pem",
+  "issued_at": "2026-05-05T02:40:47Z",
+  "issued_by_ceremony": "image-signing-root Genesis rerun 2026-05-05",
+  "status": "active",
+  "first_use": "2026-05-14T18:21:40Z (volt-linux-amd64 v0.2.0 trial signing)",
+  "rotation_plan": "Targeted Q3 2026 — image-signing-root-2026-q3 with overlap period",
+  "version_history": [
+    {
+      "version": 1,
+      "status": "destroyed",
+      "destroyed_at": "2026-05-05T02:22:04Z",
+      "irreversible_at": "2026-05-06T02:22:04Z",
+      "reason": "Ceremony deviation; v1 was created outside the time-bound ceremony window and never used to sign anything before being destroyed"
+    },
+    {
+      "version": 2,
+      "status": "active",
+      "created_at": "2026-05-05T02:40:47Z",
+      "fingerprint_sha256_der": "175951859b9aa7d0e0fd987db20d4c5d9a438a75f82fa4ac4655bbd62b3c26d9"
+    }
+  ],
+  "verification_recipe": {
+    "openssl": "openssl dgst -sha384 -verify image-signing-root-2026-q2.pem -signature <sig.bin> <artifact>",
+    "cosign_via_kms": "cosign verify-blob --insecure-ignore-tlog --key gcpkms://projects/ag-fed-signing-root-prod/locations/us-central1/keyRings/signing-root-prod-ring/cryptoKeys/image-signing-root-2026-q2/cryptoKeyVersions/2 --signature <sig> <artifact>",
+    "note": "cosign verify-blob --key <pem-file> does NOT work for ECDSA P-384 (known cosign 2.x limitation). Use openssl or cosign-via-KMS."
+  }
+}
