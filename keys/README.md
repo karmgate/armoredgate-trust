@@ -8,15 +8,21 @@ Verifiers SHOULD fetch these keys from an independent keyserver (e.g.,
 directory. Trusting the copy here without cross-reference is bootstrap-circular
 the same way trusting only `get.armoredgate.com` is.
 
-## Expected keys
+## Published keys
 
-- `karl-clinger.asc` — Karl Clinger (CEO / primary signer)
-  - **NOT YET PUBLISHED** — pending GPG key setup.
-  - When added, the fingerprint will be cross-published in:
-    - This file (this README)
-    - `keys.openpgp.org`
-    - The `TRUST-YYYY-MM-DD.txt` manifest itself
-    - Karl's personal website (TBD)
+- **`karl-clinger.asc`** — Karl Clinger (primary signer)
+  - **Fingerprint:** `7B1FE3B74A4724FF4AC2F475392A960C6822747F`
+  - **Algorithm:** Ed25519 (primary, signing/certify), cv25519 (encryption subkey)
+  - **Hardware backing:** YubiKey 5 NFC OpenPGP applet, serial `26849524`
+  - **Touch policy:** UIF Sign=on (every signature requires physical touch of the YubiKey)
+  - **Created:** 2026-05-15
+  - **Expires:** 2028-05-14 (2-year cadence; will extend or rotate before then)
+  - **Cross-published on:**
+    - This repo (file: [`keys/karl-clinger.asc`](./karl-clinger.asc))
+    - `keys.openpgp.org` (searchable by email)
+    - The clearsigned trust manifest `signatures/TRUST-2026-05-14.txt.asc`
+  - **Revocation cert:** generated 2026-05-15, printed + sealed offline in physical safe.
+    Not stored online anywhere by design (publishing it would immediately revoke this key).
 
 ## Adding a new key
 

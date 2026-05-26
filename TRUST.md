@@ -53,16 +53,18 @@ hosting).
 Substantive changes to fingerprints require pushing new commits, which appear
 in the public Git log. Anyone watching can detect retroactive edits.
 
-**Strengthening (TODO):** Commits to this repo are signed with the
-ArmoredGate maintainer's PGP key. Verifiers should fetch the GPG public key
-from a public keyserver (`keys.openpgp.org`) and configure `git` to verify
-signatures locally:
+**Active:** Commits to this repo are signed with the
+ArmoredGate maintainer's PGP key (`7B1FE3B74A4724FF4AC2F475392A960C6822747F`,
+Ed25519, hardware-backed via YubiKey 5 NFC). Verifiers should fetch the
+maintainer's GPG public key from a public keyserver (`keys.openpgp.org`) and
+configure `git` to verify signatures locally:
 
 ```bash
+gpg --keyserver keys.openpgp.org --recv-keys 7B1FE3B74A4724FF4AC2F475392A960C6822747F
 git clone https://github.com/karmgate/armoredgate-trust
 cd armoredgate-trust
-git log --show-signature pubkeys/<key-id>.json
-# Expect: "Good signature from <maintainer key fingerprint>"
+git log --show-signature
+# Expect: "Good signature from Karl Clinger <karl.clinger@armoredgate.com>"
 ```
 
 ### 2. DNS TXT records (secondary)
@@ -97,18 +99,21 @@ through Bunny. Cross-publish to a second DNS zone on a different provider
 **Location:** [`signatures/TRUST-YYYY-MM-DD.txt.asc`](./signatures/)
 (clearsigned plain-text manifest)
 
-**Signing key:** Karl Clinger's personal PGP key (also published in
-[`keys/karl-clinger.asc`](./keys/) and on `keys.openpgp.org`).
+**Signing key:** Karl Clinger's hardware-backed PGP key
+(`7B1FE3B74A4724FF4AC2F475392A960C6822747F`, Ed25519, YubiKey 5 NFC OpenPGP
+applet with UIF Sign=on so every signature requires physical touch). Public
+key published in [`keys/karl-clinger.asc`](./keys/karl-clinger.asc) and on
+`keys.openpgp.org`.
 
 **Verification:**
 
 ```bash
 # Fetch Karl's GPG public key from keyservers (independent of this repo)
-gpg --keyserver keys.openpgp.org --recv-keys <KARL_FPR>
+gpg --keyserver keys.openpgp.org --recv-keys 7B1FE3B74A4724FF4AC2F475392A960C6822747F
 
 # Verify the clearsigned trust manifest
 gpg --verify signatures/TRUST-2026-05-14.txt.asc
-# Expect: "Good signature from Karl Clinger <...>"
+# Expect: "Good signature from Karl Clinger <karl.clinger@armoredgate.com>"
 ```
 
 **Tamper resistance:** Even if both `armoredgate-trust` GitHub repo AND
@@ -159,12 +164,17 @@ suspected-compromised keys.
 
 ## Open hardening items
 
-- [ ] Enable PGP signing on all commits to this repo (requires Karl's GPG
-      key set up; deferred to first manual run)
+- [x] **Enable PGP signing on all commits to this repo** — done 2026-05-26.
+      Maintainer key `7B1FE3B74A4724FF4AC2F475392A960C6822747F` configured
+      with `commit.gpgsign = true` on the maintenance laptop.
 - [ ] Cross-publish DNS TXT records to a second DNS provider
 - [ ] Enable DNSSEC on `armoredgate.com`
 - [ ] Get a second ArmoredGate team member's GPG key to co-sign trust
-      manifests
+      manifests (multi-party attestation)
 - [ ] Publish key fingerprints to a Certificate Transparency log or
-      sigstore Rekor (separate concern: voluntary public attestation vs.
-      key publication)
+      sigstore Rekor (voluntary public attestation, separate from key
+      publication)
+- [ ] Custom org policy constraint on `ag-fed-signing-root-prod` to scope
+      `allUsers` IAM bindings to resources tagged `public-api=true`
+      (replaces the project-level `allValues: ALLOW` override from the
+      Phase 2 licensing work)

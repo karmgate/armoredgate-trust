@@ -24,18 +24,13 @@ When publishing a new trust manifest (e.g., after a key rotation):
 
 ## Status
 
-As of 2026-05-14:
+- **`TRUST-2026-05-14.txt`** — plain manifest (committed)
+- **`TRUST-2026-05-14.txt.asc`** — clearsigned manifest, **signed 2026-05-26** by Karl Clinger's YubiKey 5 NFC OpenPGP applet (Ed25519 primary key, fingerprint `7B1FE3B74A4724FF4AC2F475392A960C6822747F`, hardware-backed, touch-required for each signature)
 
-- `TRUST-2026-05-14.txt` — plain manifest (committed)
-- `TRUST-2026-05-14.txt.asc` — clearsigned manifest (**NOT YET — pending Karl Clinger's GPG setup**)
+All three trust-source legs are now live:
 
-The clearsigned file will be added once the maintainer's PGP key is configured.
-Until then, the trust chain relies on:
+1. **GitHub repo** — this repo, with PGP-signed commits going forward (verify any commit with `git log --show-signature`)
+2. **DNS TXT records** — `dig +short TXT _trust.armoredgate.com`
+3. **PGP-clearsigned manifest** — `TRUST-2026-05-14.txt.asc` (verify with `gpg --verify` after fetching Karl's pubkey from this repo or from `keys.openpgp.org`)
 
-1. GitHub repo immutability (commit history)
-2. DNS TXT records at `_trust.armoredgate.com`
-3. Plain-text manifest (this file) reviewable in `git log`
-
-These two-of-three sources are sufficient for general assurance; the PGP
-layer adds the third leg of defense-in-depth and is recommended for
-high-assurance audits (DoD-adjacent, FIPS compliance reviews).
+Cross-checking the pubkey fingerprint against ≥2 of these three sources before trusting a signed artifact is the recommended verification posture for high-assurance use (DoD-adjacent, FIPS compliance reviews).
