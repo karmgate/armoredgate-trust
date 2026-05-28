@@ -1,0 +1,105 @@
+ArmoredGate Trust Manifest
+==========================
+
+Date: 2026-05-28
+Version: 2
+Maintainer: Karl Clinger <karl.clinger@armoredgate.com>
+
+This document lists the public-key fingerprints of all currently active
+ArmoredGate signing keys. When this document is clearsigned with the
+maintainer's PGP key (see TRUST-2026-05-28.txt.asc), its contents constitute
+an out-of-band trust anchor that does NOT depend on ArmoredGate's own
+hosting infrastructure.
+
+To verify this document:
+
+    gpg --keyserver keys.openpgp.org --recv-keys 7B1FE3B74A4724FF4AC2F475392A960C6822747F
+    gpg --verify TRUST-2026-05-28.txt.asc
+
+Active signing keys
+-------------------
+
+Key:       image-signing-root-2026-q2
+Version:   2
+Use:       Customer-facing artifact signing (binaries, OCI images, partner deliverables)
+Algorithm: EC_SIGN_P384_SHA384 (ECDSA P-384 over SHA-384)
+Protection: HSM (GCP Cloud KMS, FIPS-140-3 Level 3)
+KMS resource:
+    projects/ag-fed-signing-root-prod/locations/us-central1/keyRings/signing-root-prod-ring/cryptoKeys/image-signing-root-2026-q2/cryptoKeyVersions/2
+Fingerprint (SHA-256 of DER public key):
+    175951859b9aa7d0e0fd987db20d4c5d9a438a75f82fa4ac4655bbd62b3c26d9
+PEM published at:
+    https://raw.githubusercontent.com/karmgate/armoredgate-trust/main/pubkeys/image-signing-root-2026-q2.pem
+Issued: 2026-05-05T02:40:47Z (Genesis ceremony rerun)
+First production use: 2026-05-14T18:21:40Z (volt-linux-amd64 v0.2.0)
+Rotation plan: Q3 2026 with non-disruptive overlap
+
+Key:       license-issuer-2026-q2
+Version:   1
+Use:       License JWT signing for license.armored.app (Volt CLI Pro/Enterprise gating)
+Algorithm: EC_SIGN_P384_SHA384 (ECDSA P-384 over SHA-384)
+Protection: HSM (GCP Cloud KMS, FIPS-140-3 Level 3)
+KMS resource:
+    projects/ag-fed-signing-root-prod/locations/us-central1/keyRings/signing-root-prod-ring/cryptoKeys/license-issuer-2026-q2/cryptoKeyVersions/1
+Fingerprint (SHA-256 of DER public key):
+    e8782f00b335880fe2c4a50f73dc33b4c6cde93b6ef16391d1038713d00bf0c9
+PEM published at:
+    https://raw.githubusercontent.com/karmgate/armoredgate-trust/main/pubkeys/license-issuer-2026-q2.pem
+Issued: 2026-05-13T19:59:00Z
+Rotation plan: Q3 2026 with overlap (kid header binds tokens to specific version)
+
+Revoked/destroyed keys
+----------------------
+
+Key:       image-signing-root-2026-q2 version 1
+Status:    DESTROYED 2026-05-05T02:22:04Z (irreversible since 2026-05-06T02:22:04Z)
+Reason:    Created in ceremony deviation; never used to sign anything.
+           Superseded by version 2 in the same ceremony rerun.
+
+Customer-facing signed artifacts (active)
+-----------------------------------------
+
+Artifact: volt-linux-amd64 (Volt CLI for Linux x86_64)
+Latest version: v0.3.0
+Signing key: image-signing-root-2026-q2 version 2
+Signed at: 2026-05-28T17:17Z
+SHA-256 fingerprint: ed0fe9b721ba2e9ea6374636e127c56a712db968937097df7d35aa621d8d1ae3
+Distribution URLs:
+    https://get.armoredgate.com/releases/volt-linux-amd64           (latest)
+    https://get.armoredgate.com/releases/volt-linux-amd64-v0.3.0    (versioned)
+Signature URLs:
+    https://get.armoredgate.com/releases/volt-linux-amd64.sig
+    https://get.armoredgate.com/releases/volt-linux-amd64-v0.3.0.sig
+Verify with:
+    curl -fsSL -o volt https://get.armoredgate.com/releases/volt-linux-amd64
+    curl -fsSL -o volt.sig https://get.armoredgate.com/releases/volt-linux-amd64.sig
+    curl -fsSL -o key.pem https://raw.githubusercontent.com/karmgate/armoredgate-trust/main/pubkeys/image-signing-root-2026-q2.pem
+    openssl dgst -sha384 -verify key.pem -signature volt.sig volt
+
+Release notes for v0.3.0:
+    - Phase 5 hardening: server-side slot reaper (72h heartbeat timeout)
+    - License revocation propagation via heartbeat response
+    - Client-driven slot release (`volt license deactivate` calls the server)
+
+Prior signed releases (still verifiable):
+    volt-linux-amd64 v0.2.0 (signed 2026-05-14T18:21:40Z, same signing key)
+
+Other trust sources
+-------------------
+
+Customers/auditors should cross-check these fingerprints against:
+
+  1. GitHub repository:
+     https://github.com/karmgate/armoredgate-trust
+     (See pubkeys/*.json for structured metadata)
+
+  2. DNS TXT records:
+     dig +short TXT _trust.armoredgate.com
+
+  3. This clearsigned manifest (TRUST-2026-05-28.txt.asc), verified
+     against the maintainer's PGP key from keys.openpgp.org.
+
+If any of these three sources disagree, do NOT trust the artifact.
+Contact security@armoredgate.com immediately and provide the discrepancy.
+
+End of manifest.
